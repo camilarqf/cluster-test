@@ -1,0 +1,29 @@
+---
+  - name: Realizando yum update
+    yum:
+     update_cache: yes
+
+  - name: Instalando yum utils
+    yum:
+     name: yum-utils
+     state: latest
+    become: yes
+
+  - name: Adicionar Docker repo
+    get_url:
+     url: https://download.docker.com/linux/centos/docker-ce.repo
+     dest: /etc/yum.repos.d/docer-ce.repo
+    become: yes
+
+  - name: Instalando Docker
+    package:
+     name: docker-ce
+     state: latest
+    become: yes
+
+  - name: Iniciar Docker service
+    service:
+     name: docker
+     state: started
+     enabled: yes
+    become: yes

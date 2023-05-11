@@ -1,0 +1,25 @@
+#instalando o ansible
+sudo yum update
+sudo yum install epel-release
+sudo yum -y install ansible
+
+#versão do ansible
+ansible --version
+
+#configurações servidores
+mkdir /home/cluster
+mkdir -p /home/cluster/roles/docker/tasks
+mkdir -p /home/cluster/roles/manager/tasks/
+mkdir -p /home/cluster/roles/worker/tasks/
+mkdir /home/cluster/group_vars
+touch /home/cluster/hosts
+touch /home/cluster/main.yml 
+touch /home/cluster/roles/docker/tasks/main.yml
+touch /home/cluster/roles/manager/tasks/main.yml
+touch /home/cluster/roles/worker/tasks/main.yml 
+touch /home/cluster/group_vars/all.yml
+#:w !sudo tee %
+
+#executar o playbook
+ansible-playbook -i hosts main.yml
+

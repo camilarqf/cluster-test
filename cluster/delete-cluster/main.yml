@@ -11,6 +11,8 @@
     
     - name: Remove nós do Docker Swarm
       shell: docker swarm leave --force
+      ignore_errors: yes
       become: yes
+      
       
       

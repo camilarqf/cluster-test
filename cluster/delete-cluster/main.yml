@@ -1,0 +1,32 @@
+---
+- name: Remove Docker Swarm cluster
+  hosts: docker_swarm
+  become: true
+  tasks:
+    - name: Verifica se o Docker Swarm está habilitado
+      shell: docker info
+      changed_when: False
+      register: docker_info
+      become: yes
+
+    - name: Verifica se é o manager leader
+      shell: docker node ls
+      when: "docker_info.stdout.find('Is Manager: true') == 0"
+      ignore_errors: yes
+    
+    - name: Remove Docker Swarm worker
+      shell: docker swarm leave --force
+      when: "'docker_swarm_worker' in group_names and docker_info.stdout.find('Is Manager: true') == 0"
+
+    - name: Remove Docker Swarm manager
+      shell: docker swarm leave --force
+      when: "'docker_swarm_manager' in group_names and docker_info.stdout.find('Is Manager: true') == 0"
+      
+    - name: Remove Docker Swarm manager leader
+      shell: docker swarm leave --force
+      when: inventory_hostname == groups['docker_swarm_manager'][0]
+   
+    - name: Clean swarm data directory
+      shell: rm -rf /var/lib/docker/swarm/
+      ignore_errors: true
+      

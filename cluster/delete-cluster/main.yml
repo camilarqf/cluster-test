@@ -1,6 +1,6 @@
 ---
 - name: Remove Cluster Docker Swarm
-  hosts: docker_swarm
+  hosts: docker_swarm_manager
   become: true
   tasks:
     - name: Verifica se o Docker Swarm está habilitado

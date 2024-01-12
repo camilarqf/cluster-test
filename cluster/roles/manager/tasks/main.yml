@@ -31,3 +31,17 @@
      and 'docker_swarm_manager' in group_names
      and inventory_hostname != groups['docker_swarm_manager'][0]"
     become: yes
+
+  - name: Verifica se a rede nginx-ingress-network já existe
+    shell: docker network ls | grep -q nginx-ingress-network
+    register: network_exists
+    delegate_to: "{{ groups['docker_swarm_manager'][0] }}"
+    ignore_errors: yes
+    become: yes
+
+  - name: Cria a rede nginx-ingress-network
+    shell: docker network create --driver=overlay nginx-ingress-network
+    delegate_to: "{{ groups['docker_swarm_manager'][0] }}"
+    when: network_exists.rc != 0
+    run_once: true
+    become: yes
